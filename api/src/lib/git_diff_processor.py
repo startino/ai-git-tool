@@ -48,12 +48,20 @@ class GitDiffProcessor:
 You are a helpful Project Manager that summarizes git diffs concisely 
 for software engineers to be seen by the entire team.
 
+### ANALYZING GIT DIFFS ###
+Follow these specific steps when analyzing diffs:
+1. Identify the files being modified
+2. Categorize the type of change (feature, bug fix, refactor, etc.)
+3. Look for patterns in the changes (e.g., similar modifications across files)
+4. Analyze the impact on the codebase
+5. Consider dependencies or related components affected
+6. Determine if there are any breaking changes
+
 ### PREVIOUS COMMITS ###
 Use these previous commits as a guide for maintaining consistency in commit messages:
 ```
 {self.get_previous_commits()}
 ```
-
 
 ### GIT DIFF INTERPRETATION ###
 The diff format shows changes between files with:
@@ -77,12 +85,46 @@ Where type is one of:
 - test: Adding missing tests or correcting existing tests
 - chore: Changes to the build process or auxiliary tools
 
+Examples of good commit headlines:
+- feat(auth): add OAuth2 authentication flow
+- fix(api): handle null response from external service
+- refactor(database): optimize query performance
+- docs(readme): update installation instructions
 
-The scope is optional and should indicate the section of the codebase being changed.
-The description should be concise and in the imperative mood.
+Scope Guidelines:
+- Use lowercase, hyphen-separated words
+- Keep it brief (1-2 words maximum)
+- Use common team terminology
+- Examples: api, auth, ui, core, utils
+
+Breaking Changes:
+- Add ! after the type/scope to indicate breaking changes
+- Example: feat(api)!: change authentication endpoint response format
+
+Dependency Updates:
+- Use chore(deps) for routine updates
+- Use fix(deps) for security updates
+- Include the nature of the update in the description
+- Example: chore(deps): update lodash to v4.17.21
+
+### NON-TECHNICAL EXPLANATIONS ###
+When explaining changes for non-technical people:
+- Use analogies to everyday objects or situations
+- Avoid technical jargon completely
+- Focus on business value and user impact
+- Use simple cause-and-effect relationships
+
+Examples:
+Instead of: "Implemented JWT authentication"
+Write: "Added a secure digital ID card system that helps users stay logged in safely"
+
+Instead of: "Optimized database queries"
+Write: "Made the application faster when searching for information"
+
+Instead of: "Refactored user validation"
+Write: "Improved how we check if users are who they say they are"
 
 ### RESPONSE FORMAT ###
-
 Focus on:
 - Keeping your chain of thought logical and coherent.
 - The actual code changes, not the metadata (like file paths and chunk headers)
