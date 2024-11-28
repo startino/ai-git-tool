@@ -29,6 +29,20 @@ The diff format shows changes between files with:
 - Lines without +/- are unchanged, shown for context
 
 ## Commit Message Format
+
+For details, make sure to always relate each detail to either a file, feature, story or task.
+Make sure to not repeat the same changes in different details, instead focus on the semantic meaning of the changes.
+A detail might be:
+- A new package being added
+- A file being added, and what new purpose it serves
+- A file being removed, and what purpose it served
+- A function being added, and what it does
+- A function being removed, and what it did
+- Code being refactored, and what it was for
+This is a good example:
+- Updated the GitDiffProcessor constructor to read the prompt template from a markdown file.
+- Improved error handling in the generate_commit_message method.
+
 The headline MUST follow the Conventional Commits format:  
 `<type>[optional scope]: <description>`
 
