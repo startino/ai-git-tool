@@ -32,7 +32,7 @@ What this means for technical people, in a way that is easy to understand.
     details: list[str] = Field(description="List of specific changes made")
 
 class GitDiffProcessor:
-    def __init__(self, repo_path: Optional[str] = None):
+    def __init__(self, repo_path: Optional[str] = None, personal_prompt: str = ""):
         """Initialize the GitDiffProcessor with a repo path and LangChain components."""
         load_dotenv()
         self.repo = Repo(repo_path or os.getcwd())
@@ -44,6 +44,8 @@ class GitDiffProcessor:
         self.prompt = ChatPromptTemplate.from_messages([
             SystemMessage(
                 content=f"""
+{personal_prompt}
+
 ### ROLE ###
 You are a helpful Project Manager that summarizes git diffs concisely 
 for software engineers to be seen by the entire team.
@@ -189,8 +191,11 @@ Focus on:
 if __name__ == "__main__":
     # Example usage with a path
     try:
+        personal_prompt = """
+I only really use these commit types: feat, fix, refactor, chore, style.
+"""
         repo_path = "/home/jorge/futino/ai-git-tool"
-        processor = GitDiffProcessor(repo_path)
+        processor = GitDiffProcessor(repo_path, personal_prompt)
         diff_text = processor.get_uncommitted_changes()
         summary = processor.generate_diff_summary(diff_text)
         processor.create_commit_with_summary(summary)
