@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 class CommitMessage(BaseModel):
     """Format for generating Git commit messages."""
-    headline: str = Field(description="Brief one-line summary of the changes")
+    headline: str = Field(description="Conventional Commits headline; a one line summary of the changes")
     details: list[str] = Field(description="List of specific changes made")
 
 class GitDiffProcessor:
@@ -39,9 +39,27 @@ The diff format shows changes between files with:
 - Lines starting with '+' (in green) indicate added code
 - Lines without +/- are unchanged, shown for context
 
+### COMMIT MESSAGE FORMAT ###
+The headline MUST follow the Conventional Commits format:
+<type>[optional scope]: <description>
+
+Where type is one of:
+- feat: A new feature
+- fix: A bug fix
+- docs: Documentation only changes
+- style: Changes that don't affect the meaning of the code
+- refactor: A code change that neither fixes a bug nor adds a feature
+- perf: A code change that improves performance
+- test: Adding missing tests or correcting existing tests
+- chore: Changes to the build process or auxiliary tools
+
+
+The scope is optional and should indicate the section of the codebase being changed.
+The description should be concise and in the imperative mood.
+
 ### RESPONSE FORMAT ###
 Generate a commit message with:
-1. A clear summary line describing the main change
+1. A headline following the Conventional Commits format
 2. A list of specific changes made
 
 Focus on:
