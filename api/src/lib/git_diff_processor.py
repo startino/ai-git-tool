@@ -6,6 +6,7 @@ import os
 from typing import Optional
 from dotenv import load_dotenv
 from src.interfaces import llm
+from langchain_core.messages import SystemMessage, HumanMessage
 
 class GitDiffProcessor:
     def __init__(self, repo_path: Optional[str] = None):
@@ -18,8 +19,20 @@ class GitDiffProcessor:
         
         # Create prompt template using ChatPromptTemplate
         self.prompt = ChatPromptTemplate.from_messages([
-            ("system", "You are a helpful assistant that summarizes git diffs concisely."),
-            ("user", "Please summarize these changes briefly:\n{diff_text}")
+            SystemMessage(
+                content="""
+### ROLE ###
+You are a helpful Project Manager that summarizes git diffs concisely 
+for software engineers to be seen by the entire team.
+Your commit message will be used as the commit message for the changes.
+
+### RESPONSE FORMAT ###
+todo
+
+### CURRENT DIFF ###
+{diff_text}
+                """
+            ),
         ])
         
         # Create the LCEL chain
@@ -57,7 +70,7 @@ class GitDiffProcessor:
 if __name__ == "__main__":
     # Example usage with a path
     try:
-        repo_path = "/home/jorge/futino/wb"
+        repo_path = "/home/jorge/futino/ai-git-tool"
         processor = GitDiffProcessor(repo_path)
         diff_text = processor.get_uncommitted_changes()
         summary = processor.generate_diff_summary(diff_text)
