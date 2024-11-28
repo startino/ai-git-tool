@@ -1,0 +1,59 @@
+[tool.poetry]
+name = "src"
+version = "0.0.1"
+description = "A tool to process git diffs using AI Agents"
+authors = [
+    "Jorge Lewis <jorge.lewis@futi.no>",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = { extras = ["standard"], version = "*" }
+tenacity = "*"
+supabase = "*"
+langchain = "*"
+langchain-community = "*"
+langchain-openai = "*"
+praw = "*"
+markdown = "*"
+gptrim = "*"
+selenium = "*"
+python-dotenv = "*"
+diskcache = "*"
+pydantic = "*"
+sse-starlette = "*"
+watchfiles = "*"
+ipython = "*"
+langgraph = "*"
+html2text = "*"
+langchain-core = "*"
+langchain-chroma = "*"
+chromadb = "*"
+pypdf = "*"
+pypdf2 = "*"
+langchain-experimental = "*"
+google-search-results = "*"
+sentence-transformers = "*"
+sqlmodel = "^0.0.22"
+psycopg2-binary = "^2.9.10"
+gitpython = "^3.1.43"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "*"
+black = "*"
+isort = "*"
+autoflake = "*"
+flake8 = "*"
+pytest = "*"
+pytest-cov = "*"
+pyright = "*"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 80
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
