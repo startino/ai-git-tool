@@ -122,12 +122,18 @@ class GitDiffProcessor:
             raise Exception(f"Error getting previous commits: {str(e)}")
 
 if __name__ == "__main__":
+    import argparse
+
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description='Generate git commit messages')
+    parser.add_argument('repo_name', help='Name of the repository (last folder name)')
+    args = parser.parse_args()
 
     personal_prompt = """
 I only really use these commit types: feat, fix, refactor, chore, style.
 Editing an LLMs prompt does not count as documentation.
 """
-    repo_path = "/home/jorge/futino/ai-git-tool"
+    repo_path = f"/home/jorge/futino/{args.repo_name}"
     processor = GitDiffProcessor(repo_path, personal_prompt)
     diff_text = processor.get_uncommitted_changes()
     commit_message = processor.generate_commit_message(diff_text)

@@ -56,6 +56,9 @@ The headline MUST follow the Conventional Commits format:
 - `test`: Adding missing tests or correcting existing tests
 - `chore`: Changes to the build process or auxiliary tools
 
+If you are not sure about the type, use `feat`.
+If there is a refactor but also a bug fix or feature work, use `feat`.
+
 ### Example Headlines
 - `feat(auth): add OAuth2 authentication flow`
 - `fix(api): handle null response from external service`
