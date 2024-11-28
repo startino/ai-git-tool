@@ -120,9 +120,13 @@ Focus on:
             # Stage all changes
             self.repo.git.add('.')
             
-            # Format the commit message
-            message = f"{commit_msg.headline}\n\n" + "\n".join(f"- {detail}" for detail in commit_msg.details)
-            
+            # Format the commit message (fixed string concatenation)
+            message = (
+                f"{commit_msg.headline}\n\n"
+                f"{'\n'.join(f'- {detail}' for detail in commit_msg.details)}\n\n"
+                f"What this means for non-technical people:\n{commit_msg.what_this_means_for_non_technical_people}\n\n"
+                f"What this means for technical people:\n{commit_msg.what_this_means_for_technical_people}\n\n"
+            )
             # Create commit
             self.repo.index.commit(message)
         except Exception as e:
