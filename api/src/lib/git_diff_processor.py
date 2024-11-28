@@ -1,12 +1,10 @@
 from git import Repo
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 import os
 from typing import Optional
 from dotenv import load_dotenv
 from src.interfaces import llm
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage
 from pydantic import BaseModel, Field
 
 class CommitMessage(BaseModel):
@@ -42,9 +40,6 @@ class GitDiffProcessor:
         # Initialize the LLM with structured output
         self.llm = llm.gpt_4o().with_structured_output(CommitMessage)
 
-        # list of future improvements:
-        # - get previous 10 commit messages and use them to guide the commit message
-        # - get context of entire codebase, to understand the big picture and make better decisions
         # Create prompt template using ChatPromptTemplate
         self.prompt = ChatPromptTemplate.from_messages([
             SystemMessage(
@@ -52,6 +47,11 @@ class GitDiffProcessor:
 ### ROLE ###
 You are a helpful Project Manager that summarizes git diffs concisely 
 for software engineers to be seen by the entire team.
+
+### PREVIOUS COMMITS ###
+Use these previous commits as a guide for maintaining consistency in commit messages:
+
+{self.get_previous_commits()}
 
 ### GIT DIFF INTERPRETATION ###
 The diff format shows changes between files with:
@@ -94,7 +94,6 @@ Focus on:
             ),
         ])
         
-        # Create the LCEL chain
         self.chain = self.prompt | self.llm
 
     def get_uncommitted_changes(self) -> str:
@@ -132,6 +131,16 @@ Focus on:
         except Exception as e:
             raise Exception(f"Error creating commit: {str(e)}")
 
+    def get_previous_commits(self, num_commits: int = 10) -> str:
+        """Get the last n commit messages from the repository."""
+        try:
+            commits = list(self.repo.iter_commits('HEAD', max_count=num_commits))
+            commit_messages = []
+            for commit in commits:
+                commit_messages.append(f"commit {commit.hexsha[:8]}\n{commit.message}")
+            return "\n\n".join(commit_messages)
+        except Exception as e:
+            raise Exception(f"Error getting previous commits: {str(e)}")
 
 if __name__ == "__main__":
     # Example usage with a path
