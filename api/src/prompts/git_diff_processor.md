@@ -43,6 +43,8 @@ This is a good example:
 - Updated the GitDiffProcessor constructor to read the prompt template from a markdown file.
 - Improved error handling in the generate_commit_message method.
 
+Group changes related to refactoring or renaming in the same detail, with an overarching description of where the changes were made.
+
 The headline MUST follow the Conventional Commits format:  
 `<type>[optional scope]: <description>`
 
