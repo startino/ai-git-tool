@@ -25,6 +25,12 @@ Take your time to think and reason.
 Always start with `Let's think step by step.`
 """)
     headline: str = Field(description="Conventional Commits headline; a one line summary of the changes")
+    what_this_means_for_non_technical_people: str = Field(description="""
+What this means for non-technical people, in a way that is easy to understand.
+""")
+    what_this_means_for_technical_people: str = Field(description="""
+What this means for technical people, in a way that is easy to understand.
+""")
     details: list[str] = Field(description="List of specific changes made")
 
 class GitDiffProcessor:
