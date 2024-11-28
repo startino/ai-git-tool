@@ -11,6 +11,19 @@ from pydantic import BaseModel, Field
 
 class CommitMessage(BaseModel):
     """Format for generating Git commit messages."""
+    chain_of_thought: str = Field(description="""
+This is your chain of thought, your reasoning, to craft the final response.
+
+Here are a few things to keep in mind:
+1. Define a clear strategy to approach the Human Expert's needs.
+2. Think step by step about how to solve the problem.
+3. Get a clear understanding of how you can approach it.
+4. Take into account the output of the previous tool calls and model calls to check whats already been done and what should be the next step.
+5. Your tool output has already reached user, so you don't need to repeat that in your response, only use it to guide your response and get insights and intuitions.
+
+Take your time to think and reason.
+Always start with `Let's think step by step.`
+""")
     headline: str = Field(description="Conventional Commits headline; a one line summary of the changes")
     details: list[str] = Field(description="List of specific changes made")
 
