@@ -125,6 +125,7 @@ if __name__ == "__main__":
 
     personal_prompt = """
 I only really use these commit types: feat, fix, refactor, chore, style.
+Editing an LLMs prompt does not count as documentation.
 """
     repo_path = "/home/jorge/futino/ai-git-tool"
     processor = GitDiffProcessor(repo_path, personal_prompt)
