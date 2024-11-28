@@ -123,7 +123,7 @@ Focus on:
             # Format the commit message (fixed string concatenation)
             message = (
                 f"{commit_msg.headline}\n\n"
-                f"{'\n'.join(f'- {detail}' for detail in commit_msg.details)}\n\n"
+                f"Code Changes:\n{'\n'.join(f'- {detail}' for detail in commit_msg.details)}\n\n"
                 f"What this means for non-technical people:\n{commit_msg.what_this_means_for_non_technical_people}\n\n"
                 f"What this means for technical people:\n{commit_msg.what_this_means_for_technical_people}\n\n"
             )
