@@ -7,6 +7,12 @@ from typing import Optional
 from dotenv import load_dotenv
 from src.interfaces import llm
 from langchain_core.messages import SystemMessage, HumanMessage
+from pydantic import BaseModel, Field
+
+class CommitMessage(BaseModel):
+    """Format for generating Git commit messages."""
+    headline: str = Field(description="Brief one-line summary of the changes")
+    details: list[str] = Field(description="List of specific changes made")
 
 class GitDiffProcessor:
     def __init__(self, repo_path: Optional[str] = None):
@@ -14,8 +20,8 @@ class GitDiffProcessor:
         load_dotenv()
         self.repo = Repo(repo_path or os.getcwd())
         
-        # Initialize the LLM
-        self.llm = llm.gpt_4o()
+        # Initialize the LLM with structured output
+        self.llm = llm.gpt_4o().with_structured_output(CommitMessage)
         
         # Create prompt template using ChatPromptTemplate
         self.prompt = ChatPromptTemplate.from_messages([
@@ -24,10 +30,11 @@ class GitDiffProcessor:
 ### ROLE ###
 You are a helpful Project Manager that summarizes git diffs concisely 
 for software engineers to be seen by the entire team.
-Your commit message will be used as the commit message for the changes.
 
 ### RESPONSE FORMAT ###
-todo
+Generate a commit message with:
+1. A clear summary line describing the main change
+2. A list of specific changes made
 
 ### CURRENT DIFF ###
 {diff_text}
@@ -36,7 +43,7 @@ todo
         ])
         
         # Create the LCEL chain
-        self.chain = self.prompt | self.llm | StrOutputParser()
+        self.chain = self.prompt | self.llm
 
     def get_uncommitted_changes(self) -> str:
         """Get diff between working directory and HEAD."""
@@ -55,14 +62,17 @@ todo
         except Exception as e:
             raise Exception(f"Error generating summary: {str(e)}")
 
-    def create_commit_with_summary(self, summary: str) -> None:
-        """Create a git commit with the provided summary."""
+    def create_commit_with_summary(self, commit_msg: CommitMessage) -> None:
+        """Create a git commit with the provided structured summary."""
         try:
             # Stage all changes
             self.repo.git.add('.')
             
-            # Create commit with the AI-generated summary
-            self.repo.index.commit(summary)
+            # Format the commit message
+            message = f"{commit_msg.headline}\n\n" + "\n".join(f"- {detail}" for detail in commit_msg.details)
+            
+            # Create commit
+            self.repo.index.commit(message)
         except Exception as e:
             raise Exception(f"Error creating commit: {str(e)}")
 
