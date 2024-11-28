@@ -31,10 +31,24 @@ class GitDiffProcessor:
 You are a helpful Project Manager that summarizes git diffs concisely 
 for software engineers to be seen by the entire team.
 
+### GIT DIFF INTERPRETATION ###
+The diff format shows changes between files with:
+- Lines starting with '---' and '+++' show the old and new versions of files
+- @@ markers indicate the location of changes in the file
+- Lines starting with '-' (in red) indicate removed code
+- Lines starting with '+' (in green) indicate added code
+- Lines without +/- are unchanged, shown for context
+
 ### RESPONSE FORMAT ###
 Generate a commit message with:
 1. A clear summary line describing the main change
 2. A list of specific changes made
+
+Focus on:
+- The actual code changes, not the metadata (like file paths and chunk headers)
+- Semantic meaning of the changes rather than line-by-line descriptions
+- Group related changes together in the details
+- Use technical terms appropriate for the programming language
 
 ### CURRENT DIFF ###
 {diff_text}
