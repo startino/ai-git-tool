@@ -50,8 +50,10 @@ for software engineers to be seen by the entire team.
 
 ### PREVIOUS COMMITS ###
 Use these previous commits as a guide for maintaining consistency in commit messages:
-
+```
 {self.get_previous_commits()}
+```
+
 
 ### GIT DIFF INTERPRETATION ###
 The diff format shows changes between files with:
@@ -131,7 +133,7 @@ Focus on:
         except Exception as e:
             raise Exception(f"Error creating commit: {str(e)}")
 
-    def get_previous_commits(self, num_commits: int = 10) -> str:
+    def get_previous_commits(self, num_commits: int = 15) -> str:
         """Get the last n commit messages from the repository."""
         try:
             commits = list(self.repo.iter_commits('HEAD', max_count=num_commits))
