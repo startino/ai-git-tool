@@ -35,11 +35,14 @@ class GitDiffProcessor:
         
         # Initialize the LLM with structured output
         self.llm = llm.gpt_4o().with_structured_output(CommitMessage)
-        
+
+        # list of future improvements:
+        # - get previous 10 commit messages and use them to guide the commit message
+        # - get context of entire codebase, to understand the big picture and make better decisions
         # Create prompt template using ChatPromptTemplate
         self.prompt = ChatPromptTemplate.from_messages([
             SystemMessage(
-                content="""
+                content=f"""
 ### ROLE ###
 You are a helpful Project Manager that summarizes git diffs concisely 
 for software engineers to be seen by the entire team.
@@ -71,18 +74,16 @@ The scope is optional and should indicate the section of the codebase being chan
 The description should be concise and in the imperative mood.
 
 ### RESPONSE FORMAT ###
-Generate a commit message with:
-1. A headline following the Conventional Commits format
-2. A list of specific changes made
 
 Focus on:
+- Keeping your chain of thought logical and coherent.
 - The actual code changes, not the metadata (like file paths and chunk headers)
 - Semantic meaning of the changes rather than line-by-line descriptions
 - Group related changes together in the details
 - Use technical terms appropriate for the programming language
 
 ### CURRENT DIFF ###
-{diff_text}
+{self.get_uncommitted_changes()}
                 """
             ),
         ])
