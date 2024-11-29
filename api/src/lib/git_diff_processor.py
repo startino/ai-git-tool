@@ -132,6 +132,25 @@ if __name__ == "__main__":
     personal_prompt = """
 I only really use these commit types: feat, fix, refactor, chore, style.
 Editing an LLMs prompt does not count as documentation.
+Use feats over refactors, when the git diffs contain both refactoring and new features.
+If the choice is between a refactor and a fix, choose fix.
+
+If the git diff might look like a partial refactor, keep in mind that it could be a fix.
+
+
+Good examples:
+```
+fix(eca): updated the keys of the supervisor node to use updated naming conventions
+Code Changes:
+- Renamed 'job_type' to 'selected_agent' in convert_to_expert_state function in expert.py.
+- Updated Supervisor class in supervisor.py to use 'selected_agent' instead of 'job_type' for better consistency.
+
+What this means for non-technical people:
+The system has been updated to use more consistent naming conventions internally, which helps developers maintain and improve the system more efficiently.
+
+What this means for technical people:
+The variable 'job_type' has been renamed to 'selected_agent' in the expert and supervisor nodes to ensure consistency with the rest of the codebase. This change improves code readability and maintainability.
+```
 """
     repo_path = f"/home/jorge/futino/{args.repo_name}"
     processor = GitDiffProcessor(repo_path, personal_prompt)
