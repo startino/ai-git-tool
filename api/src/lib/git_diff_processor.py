@@ -110,13 +110,31 @@ class GitDiffProcessor:
         except Exception as e:
             raise Exception(f"Error creating commit: {str(e)}")
 
-    def get_previous_commits(self, num_commits: int = 15) -> str:
-        """Get the last n commit messages from the repository."""
+    def get_previous_commits(self, detailed_commits: int = 5, headline_commits: int = 30) -> str:
+        """Get commit history with a mix of detailed and headline-only commits.
+        
+        Args:
+            detailed_commits: Number of recent commits to show with full details
+            headline_commits: Number of older commits to show with just headlines
+            
+        Returns:
+            String containing formatted commit history
+        """
         try:
-            commits = list(self.repo.iter_commits('HEAD', max_count=num_commits))
+            total_commits = detailed_commits + headline_commits
+            commits = list(self.repo.iter_commits('HEAD', max_count=total_commits))
             commit_messages = []
-            for commit in commits:
+            
+            # Process detailed commits
+            for commit in commits[:detailed_commits]:
                 commit_messages.append(f"commit {commit.hexsha[:8]}\n{commit.message}")
+            
+            # Process headline-only commits
+            for commit in commits[detailed_commits:]:
+                # Get just the first line of the commit message
+                headline = commit.message.split('\n')[0]
+                commit_messages.append(f"commit {commit.hexsha[:8]}\n{headline}")
+                
             return "\n\n".join(commit_messages)
         except Exception as e:
             raise Exception(f"Error getting previous commits: {str(e)}")
